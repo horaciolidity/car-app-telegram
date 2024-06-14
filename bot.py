@@ -19,8 +19,8 @@ def start(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Click to start the game', reply_markup=reply_markup)
 
 def main() -> None:
-    updater = Updater(TOKEN, use_context=True)
-    
+    updater = Updater(TOKEN)
+
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler('start', start))
