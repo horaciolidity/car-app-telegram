@@ -1,14 +1,14 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import Updater, CommandHandler, CallbackContext
 
 # Configuración inicial
 TOKEN = '7337308320:AAHltD0AhkXTQKC1B4QVkyL9PhHVBix9Epg'
-WEB_APP_URL = 'https://tuservidor.com/car_game.html'  # Cambia esto por la URL donde alojarás tu archivo HTML
+WEB_APP_URL = 'https://car-app-telegram.vercel.app/'  # URL de tu Web App
 
 def start(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [
-            InlineKeyboardButton("Start Game", web_app=WEB_APP_URL),
+            InlineKeyboardButton("Start Game", web_app=WebAppInfo(url=WEB_APP_URL)),
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
