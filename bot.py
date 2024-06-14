@@ -1,9 +1,13 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+import logging
 
 # Configuración inicial
 TOKEN = '7337308320:AAHltD0AhkXTQKC1B4QVkyL9PhHVBix9Epg'
 WEB_APP_URL = 'https://car-app-telegram.vercel.app/'  # URL de tu Web App
+
+# Configuración de logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 def start(update: Update, context: CallbackContext) -> None:
     keyboard = [
@@ -15,9 +19,11 @@ def start(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Click to start the game', reply_markup=reply_markup)
 
 def main() -> None:
-    updater = Updater(TOKEN)
+    updater = Updater(TOKEN, use_context=True)
+    
+    dispatcher = updater.dispatcher
 
-    updater.dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('start', start))
 
     updater.start_polling()
     updater.idle()
