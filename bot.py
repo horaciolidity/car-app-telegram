@@ -1,32 +1,33 @@
-from telegram.ext import Updater, CommandHandler, CallbackContext
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-import logging
+import json
+import requests
+from flask import Flask, request
 
 # Configuración inicial
 TOKEN = '7337308320:AAHltD0AhkXTQKC1B4QVkyL9PhHVBix9Epg'
 WEB_APP_URL = 'https://car-app-telegram.vercel.app/'  # URL de tu Web App
 
-# Configuración de logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+app = Flask(__name__)
 
-def start(update: Update, context: CallbackContext) -> None:
-    keyboard = [
-        [
-            InlineKeyboardButton("Start Game", web_app=WebAppInfo(url=WEB_APP_URL)),
-        ],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Click to start the game', reply_markup=reply_markup)
+@app.route(f'/{TOKEN}', methods=['POST'])
+def webhook():
+    data = request.get_json()
 
-def main() -> None:
-    updater = Updater(TOKEN)
+    if 'message' in data:
+        chat_id = data['message']['chat']['id']
+        message_id = data['message']['message_id']
+        text = data['message'].get('text', '')
 
-    dispatcher = updater.dispatcher
+        if text == '/start':
+            keyboard = {
+                'inline_keyboard': [
+                    [{'text': 'Start Game', 'url': WEB_APP_URL}]
+                ]
+            }
+            reply_markup = json.dumps(keyboard)
+            url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
+            requests.post(url, json={'chat_id': chat_id, 'text': 'Click to start the game', 'reply_markup': reply_markup})
 
-    dispatcher.add_handler(CommandHandler('start', start))
-
-    updater.start_polling()
-    updater.idle()
+    return '', 200
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)
