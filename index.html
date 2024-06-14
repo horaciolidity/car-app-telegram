@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #gameCanvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Car Game</h1>
+    <p>Tap the screen to move the car.</p>
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let playerX = 10;
+        let opponentX = 10;
+
+        function drawCar(x, y, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, 50, 20);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function updateGame() {
+            clearCanvas();
+            drawCar(playerX, 100, 'blue');
+            drawCar(opponentX, 200, 'red');
+
+            if (playerX >= canvas.width - 60) {
+                alert('You win!');
+                playerX = 10;
+                opponentX = 10;
+            } else if (opponentX >= canvas.width - 60) {
+                alert('You lose!');
+                playerX = 10;
+                opponentX = 10;
+            }
+
+            requestAnimationFrame(updateGame);
+        }
+
+        canvas.addEventListener('click', () => {
+            playerX += 10;
+        });
+
+        setInterval(() => {
+            opponentX += Math.random() * 5;
+        }, 1000);
+
+        updateGame();
+    </script>
+</body>
+</html>
